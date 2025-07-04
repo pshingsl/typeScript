@@ -1,4 +1,7 @@
+// 명시적 타입 선언
+
 // string
+// 타입 추론
 let username : string = 'Alice';
 let message : string = `Hello, ${username}`;
 
@@ -44,3 +47,5 @@ function throwError(): never{
 //object
 
 let obj : object = {name:"Sack"}
+
+let obj2 : {name: string} = {name:"Alice"}
