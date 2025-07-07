@@ -6,7 +6,7 @@ const initialTodos = [
   { id: 5, title: "JS 이벤트 처리", description: "버튼 클릭 이벤트 연결", isCompleted: false },
   { id: 6, title: "localStorage 학습", description: "토큰 저장/조회 구현", isCompleted: true },
   { id: 7, title: "Card 컴포넌트 만들기", description: "할 일 항목 UI 구성", isCompleted: false },
-  { id: 8, "title": "filter 함수 사용법", description: "배열 조건 필터링", isCompleted: true },
+  { id: 8, title: "filter 함수 사용법", description: "배열 조건 필터링", isCompleted: true },
   { id: 9, title: "삼항 연산자 복습", description: "렌더링 조건 표현에 사용", isCompleted: false },
   { id: 10, title: "Todo 삭제 기능 설계", description: "옵션 항목 (필수 아님)", isCompleted: false },
   { id: 11, title: "폼 유효성 검사", description: "필수 입력 검사", isCompleted: true },
@@ -73,13 +73,14 @@ let user1: Users = {
   email: "user1@example.com",
   password: "password123"
 }
-
-
 console.log(user1)
+
+
 const delay = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms));
 console.log(delay)
 
+// 비동기로 전환
 export const todoAPI = {
   async fetchTodos(): Promise<Todos[]> {
     await delay(800);
@@ -88,11 +89,16 @@ export const todoAPI = {
 
 
 
-  async addTodo(todo:Todos[]) {
+  /* Omit<T, K>란? -> 타입 T에서 K 속성을 제외한 새로운 타입을 만든다.
+    쓰는 이유
+    1. 새로운 할 일을 추가할때 id는 사용자가 직접 정하지 않는다
+    2. 이걸 강제로 코드로 강제하려고
+  */
+  async addTodo(todo:Omit<Todos, 'id'>): Promise<Todos> {
     await delay(500);
     const newTodo = {
       ...todo,
-      id: Date.now(), // 임시 ID 생성
+      id: Date.now(),
     };
     return newTodo;
   },
@@ -108,6 +114,18 @@ export const todoAPI = {
     return todoId;
   },
 
+  /**
+   * Partial<T>란?
+   * 타입 T의 모든 속성을 선택적(optional)을 만든다
+   * 
+   * 쓰는 이유
+   * 일부 속성만 바꿀 때
+   * 예시)
+   * 제목만 바꾸거나
+   * 완료여부만 바꾸거나
+   * 둘다 안 바꾸거나 
+   * 이때 모든 속성은 ?(선택)이어야 한다
+   */
    async updateTodo(todoId: number, updates: Partial<Omit<Todos, 'id'>>): Promise<Todos> {
     await delay(400);
     return { id: todoId, ...updates } as Todos;
@@ -115,7 +133,7 @@ export const todoAPI = {
 };
 
 export const userAPI = {
-  async login(email:string, password:string): Promise<{ success: true; user: Pick<User, 'email'> }> {
+  async login(email:string, password:string): Promise<{ success: true; user: Pick<Users, 'email'> }> {
     await delay(600);
     const user = initialUsers.find(u => u.email === email && u.password === password);
     if (user) {
@@ -125,8 +143,15 @@ export const userAPI = {
   },
 };
 
+interface TodoStats {
+  total:number;
+  completed:number;
+  pending:number
+  completionRate:number;
+}
+
 export const todoStats = {
-  calculateStats(todos:Todos[]) {
+  calculateStats(todos:Todos[]):TodoStats {
     const total = todos.length;
     const completed = todos.filter(todo => todo.isCompleted).length;
     const pending = total - completed;
