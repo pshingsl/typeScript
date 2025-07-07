@@ -45,6 +45,10 @@ function getVoteResult(options: VoteOption[]): void {
 // 진행 중인 투표가 없는 경우 null
 // 입력으로 VoteOption []
 // 내 생각 
+// 1. 각 항목당 투표값들 더함 -> 옵션이 여러개 있어야함
+// 2. 비교를 하며 높은것을 찾는다 -> 매개변수에 만든 옵션들을 비교한다
+// 3. 최댓값이 나왔는데 그 값이 2개를 가지면 첫번째로 가져옴 -> 적어도 비교 해야할거 3개이상 만들기
+// 3. 진행 중인 투표가 없다 -> 끝 -> null
 function getWinner(options: VoteOption[]): VoteOption | null {
   if (options.length === 0) {
     return null;
