@@ -121,14 +121,14 @@ tesla.go();
 
 // 업캐스팅 예시
 class Animal {
-  eat(){
+  eat() {
     console.log("먹는다")
   }
 } // Animal = any 최상위 -> 자세한건 월에 했던 any내용 보기
 
-class Dog extends Animal{
-  name:string;
-  constructor(inputName:string){
+class Dog extends Animal {
+  name: string;
+  constructor(inputName: string) {
     super();
     this.name = inputName
   }
@@ -136,24 +136,24 @@ class Dog extends Animal{
 }
 
 let dog: Dog = new Dog('DDO DDO');
-let animal : Animal = dog;
+let animal: Animal = dog;
 
 animal.eat();
 
 // 다운캐스팅
-let animal2 : Animal;
+let animal2: Animal;
 let dog2: Dog = new Dog('DDO');
 
 // let realDog : Dog = animal error 
 // 왜 에러? -> animal 실제로 Dog가 아닐지 모름 
 // animal 타입엔 name이 없음 안전을 위해 강제로는 못 바꿔줌.
-let realDog : Dog = animal as Dog
+let realDog: Dog = animal as Dog
 animal.eat();
 
 /**3시 내용 
  * 추상 클래스
  * 추상 클래스는 클래스와는 다르게 인스턴스화를 할 수 없는 클래스
- * 추상 클래스의 목적은 상속을 통해 자식 클래스에서 메서드르 제각각 구현하도록 강제를 하는 용도
+ * 추상 클래스의 목적은 상속을 통해 자식 클래스에서 메서드를 제각각 구현하도록 강제를 하는 용도
  * 추상 클래스도 최소한의 기본 메서드는 정의를 할 수 있음
  * 핵심 기능의 구현은 전부 자식 클래스에게 위임
  * 함수구현을 무조건 자식클래스에서 해야함
@@ -186,7 +186,7 @@ animal.eat();
  * 2) 개방 폐쇠 원칙(OCP) 인터페이스와 상속 연관
  * 클래스는 확장에 대해서는 열려 있어야 하고 수정에 대해서는 닫혀 있어야 한다는 원칙
  * 클래스의 기존코드를 변경하지 않고도 기능을 확장할 수 있어야한다
- * 즉, 인터페이스나 상속을 토앻서 이를 해결할 수 있다
+ * 즉, 인터페이스나 상속을 통해서 이를 해결할 수 있다
  * 부모 클래스의 기존 코드 변경을 하지 않고 기능을 확장 가능함
  * 
  * 3) 리스코프 치환 원칙 (LSP)
@@ -199,70 +199,77 @@ animal.eat();
  * 무조건 무의미한것들을 받으면 성능이 떨어진다
  * 즉, 해당 클래스에게 무의미한 메소드의 구현을 막자는 의미
  * 인터페이스를 너무 크게 정의하기보단 필요한 만큼만 정의하고 클래스는 요구사항에 맞게 인터페이스를 구현 하도록 유도 해야한다
+ * 자바스크립트의 1급객체인 함수처럼 찢는것처럼 인터페이스도 많이 분리해서 관리하기 쉽게 해라
  * 
- * 5)
+ * 5) 의존 역전 원칙 (DIP)
+ * DIP는 JAVA의 Spring 프레임워크나 Node.js의 Nest.js 프레임워크와 같이 웹 서버 프레임워크 내에서 많이 나오는 원칙
+ * 이 원칙은 하위(상속 받은 애들) 수준 모듈(구현 클래스)보다 상위 수준 모듈(인터페이스)에 의존을 해야한단느 의미
+ * 
+ * 
  */
 
+// 추상 클래스
 abstract class Media {
-   constructor(public title:string){
-    
-   }
-   abstract play(): void; // 추상 클래스 정의하 메서드는 상속받은 자식 클래스에서 무조건 만들어야한다. -> 추상 메서드 필요
- }
+  constructor(public title: string) {
 
- class Song extends Media{
+  }
+  abstract play(): void; // 추상 클래스 정의하 메서드는 상속받은 자식 클래스에서 무조건 만들어야한다. -> 추상 메서드 필요
+}
+
+class Song extends Media {
   play(): void {
     console.log(`${this.title}노래가 재생 중`)
   }
- }
+}
 
- const song1:Song = new Song('Perfect');
- song1.play();
+const song1: Song = new Song('Perfect');
+song1.play();
 
 
- // 단일 책임의 원칙 예시
- class UserService{
-  constructor(private db: Database){}
+// 단일 책임의 원칙 예시
+class UserService {
+  constructor(private db: Database) { }
 
-  getUser(id:number): void{
+  getUser(id: number): void {
 
     return this.db.findUser(id);
   }
 
-   saveUser(user:User): void{
+  saveUser(user: User): void {
 
     return this.db.saveUser(user);
   }
- }
+}
 
- class EmailService{
-  sendWelcomeEmail(user:User):void{
+class EmailService {
+  sendWelcomeEmail(user: User): void {
     console.log(`Sending welcome emaul to ${user.email}`)
   }
- }
+}
+// 유저 서비스는 유저만 관리 이메일서비스는 이메일 전송만 관리
 
- // 개방 폐쇠 원칙 예시
- interface Notifiacation {
-  send(message:string):void;
- }
+// 개방 폐쇠 원칙 예시
+interface Notifiacation {
+  send(message: string): void;
+}
 
- class EmailNotifier implements Notifiacation {
-  send(msg: string){
+class EmailNotifier implements Notifiacation {
+  send(msg: string) {
     console.log(`이메일 발송: ${msg}`)
   }
- }
+}
 
-  class SMSNotifier implements Notifiacation {
-  send(msg: string){
+class SMSNotifier implements Notifiacation {
+  send(msg: string) {
     console.log(`SMS 발송: ${msg}`)
   }
- }
+}
 
- function notify(userMsg: string, service: Notifiacation){
+function notify(userMsg: string, service: Notifiacation) {
   service.send(userMsg);
- }
+}
 
- // 리스코프 치환 원칙 예시
+// 리스코프 치환 원칙 예시
 //  class Bird{
 //   fly(): void{
 //     console.log('펄럭펄럭')
@@ -273,33 +280,139 @@ abstract class Media {
 //   // 에러 펭귄을 날지 못함 해결방법 단일 책임의 원칙? 인터페이스? 추상 클래스?
 //  }
 
- // 리스코프 치환 해결 방법 -> 추상 클래스 이용해 논리적으로 맞춰야한다
- abstract class Bird{
+// 리스코프 치환 해결 방법 -> 추상 클래스 이용해 논리적으로 맞춰야한다
+abstract class Bird {
   abstract move(): void;
- }
+}
 
- class NonFlylingBird extends Bird{
-  move(){
+class NonFlylingBird extends Bird {
+  move() {
     console.log('펄럭펄럭')
   }
- }
+}
 
-  class FlylingBird extends Bird{
-  move(){
+class FlylingBird extends Bird {
+  move() {
     console.log('뚜벅뚜벅')
   }
- }
+}
 
- // 인터페이스 분리 원칙 예시
- interface Printer{
+// 인터페이스 분리 원칙 예시
+interface Printer {
   print(): void;
- }
+}
 
-  interface Scanner{
+interface Scanner {
   scan(): void;
- }
+}
 
- class SmartPrinter implements Printer, Scanner{
-  print() {}
-  scan() {}
- }
+class SmartPrinter implements Printer, Scanner {
+  print() { }
+  scan() { }
+}
+
+// 의존 역전 원칙 예시
+interface MyStorage {
+  save(data: string): void
+}
+
+class MyLocalStorage implements MyStorage {
+  save(data: string): void {
+    console.log(`로컬에 저장 ${data}`)
+  }
+}
+
+class MyCloudStorage implements MyStorage {
+  save(data: string): void {
+    console.log(`클라우드에 저장 ${data}`)
+  }
+}
+
+class Database {
+  constructor(private storage: MyStorage) { }
+
+  saveData(data: string): void {
+    this.storage.save(data);
+  }
+}
+const myLocalStorage = new MyLocalStorage();
+const myCloudStorage = new MyCloudStorage();
+const myLocalDatabase = new Database(myLocalStorage)
+const myCloudDatabase = new Database(myCloudStorage)
+myLocalDatabase.saveData("로컬 데이터")
+myCloudDatabase.saveData("클라우드 데이터")
+// 이렇게 짠 이유는 MyStorage만 있으면 클라우드도 쓸 수 있고 로컬도 쓸 수 있다 -> 슈퍼 타입
+// 안정성을 보장해줌 유지 보수도 좋다 재사용성이 높아짐
+
+/**
+ * Enum과 객체 리터럴
+ * -공통점 
+ * enum과 객체 리터럴은 모두 상수를 정의하고 그룹화 하는데 사용할 수 있다
+ * 
+ * -차이점
+ * 1)enum
+ * enum은 상수 값들의 집합을 정의하는 데 사용되는 특별한 데이터 타입 -> 쓰는 이유
+ * 문자열과 숫자만 들어 갈 수 있다.
+ * 주로 관련된 상수들을 명확하게 그룹화하고 관리할 때 유용
+ * 가독성 및 명확성: 상수 값에 의미 있는 이름을 부여하여 코드의 가독성을 높아진다
+ * 미리 정의된 상수 값만 사용할 수 있어 타입 안정성이 높다
+ * 변경된 일이 없을때 주로 쓴다
+ *
+ * 
+ * 2) 객체 리터럴
+ * 객체 리터럴은 키-값 쌍으로 구성된 객체를 직접 생성하는 방식
+ * const또는 let 키워드를 사용하여 정의하며, 다양한 데이터 타입을 값으로 가질 수 있음
+ * 유연한 구조: enum과 달리 키에 다양한 타입의 값을 할당할 수 있다.
+ * 런타임 유연성: 필요에 따라 객체의 속성을 추가, 수정, 삭제하는 등 다양한 용도로 활용
+ * 다목적 사용: 상수 그룹화 외에도 데이터 구조, 설정 객체 등 다양한 용도로 활용
+ */
+
+//enum 쓰는 이유 안정성
+enum UserRole {
+  ADMIN = "ADMIN",
+  EDITOR = "EDITOR",
+  VIEWER = "VIEWER",
+}
+
+enum OrderStatus {
+  PENDING,    //0
+  PROCESSING, //1
+  COMPLETED,  //2
+  CANCLLED,   //3
+}
+function handleUserAction(role: UserRole, order: OrderStatus): void {
+  if (role === UserRole.ADMIN) {
+    console.log("관리자 권한으로 작업을 수행합니다")
+  } else if (role === UserRole.EDITOR) {
+    console.log("편집자 권한으로 작업을 수행합니다")
+  } else {
+    console.log("일반 사용자 권한으로 작업을 수행합니다")
+  }
+
+  switch (order) {
+    case OrderStatus.PENDING:
+      console.log("주문이 대기 중입니다")
+      break
+    case OrderStatus.COMPLETED:
+      console.log("주문이 완료되었습니다")
+      break
+    default:
+      console.log("주문 상태를 확인해주세요")
+  }
+}
+
+const currentUserRole : UserRole = UserRole.EDITOR
+const currentOrderStatus : OrderStatus = OrderStatus.PENDING
+handleUserAction(currentUserRole, currentOrderStatus)
+
+// 객체 리터럴
+const appConfig = {
+  appName: "My Awesome App",
+  version: "1.0.0",
+  apiEndPoints: {
+    users: "/api/users",
+    products: "/api/products",
+  },
+  isActicve: true,
+  maxUsers: 100,
+}
