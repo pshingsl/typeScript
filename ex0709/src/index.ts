@@ -149,3 +149,157 @@ let dog2: Dog = new Dog('DDO');
 // animal 타입엔 name이 없음 안전을 위해 강제로는 못 바꿔줌.
 let realDog : Dog = animal as Dog
 animal.eat();
+
+/**3시 내용 
+ * 추상 클래스
+ * 추상 클래스는 클래스와는 다르게 인스턴스화를 할 수 없는 클래스
+ * 추상 클래스의 목적은 상속을 통해 자식 클래스에서 메서드르 제각각 구현하도록 강제를 하는 용도
+ * 추상 클래스도 최소한의 기본 메서드는 정의를 할 수 있음
+ * 핵심 기능의 구현은 전부 자식 클래스에게 위임
+ * 함수구현을 무조건 자식클래스에서 해야함
+ * 
+ * 상속은 1개밖에 못 받음 이 문제를 해결하기 위해 인터페이스가 탄생
+ * 인터페이스
+ * 인터페이스는 객체가 가져야 하는 속성과 메서드를 정의
+ * 인터페이스를 구현한 객체는 인터페이스를 반드시 준수해야한다! 규약과 같아서 어길 수 없다!
+ * 코드의 안정성을 높이고 유지 보수성을 향상 시킬 수 있다
+ * 
+ * 구현부 
+ * 추상 클래스 : 클래스의 기본 구현을 제공
+ * 인터페이스 : 객체의 구조만을 정의하고 기본 구현을 제공하지 않음
+ * 
+ * 동작 방식
+ * 추상 클래스 : 단일 상속만 지원 예시) 클래스를 상속 받으면 다른 클래스는 상속 못받음
+ * 인터페이스 : 다중 상속을 지원
+ * 
+ * 구현 방식
+ * 추상 클래스 : 추상 클래스를 상속받은 자식 클래스는 반드시 추상 함수를 구현
+ * 인터페이스 : 인터페이스를 구현하는 클래스는 인터페이스에 정의된 모든 메서드를 전부 구현
+ * 
+ * S.O.L.I.D 원칙
+ * 
+ * 1) 단일 책임의 원칙 (SRP) *****
+ * 클래스는 하나의 책임만 가져야 한다는 매우 기본적인 원칙
+ * 5개의 설계 원칙 중 가장 기본적이고 중요한 원칙
+ * 예를 들면, 유저 서비스라는 클래스가 있는 경우 해당 클래스는 유저 관련된 액션만 해야되고 다른 액션을 해서는 안됨
+ * 
+ * 2) 개방 폐쇠 원칙(OCP) 인터페이스와 상속 연관
+ * 클래스는 확장에 대해서는 열려 있어야 하고 수정에 대해서는 닫혀 있어야 한다는 원칙
+ * 클래스의 기존코드를 변경하지 않고도 기능을 확장할 수 있어야한다
+ * 즉, 인터페이스나 상속을 토앻서 이를 해결할 수 있다
+ * 부모 클래스의 기존 코드 변경을 하지 않고 기능을 확장 가능함
+ * 
+ * 3) 리스코프 치환 원칙 (LSP)
+ * 서브타입은 기반이 되는 슈퍼타입을 대체할 수 있어야 한다는 원칙
+ * 다시 말해, 자식 클래스는 부모 클래스의 기능을 수정하지 않고도 부모 클래스와 호환되어야 한다 -> 추상 클래스
+ * 논리적으로 엄격하게 관계가 정립이 되어야 한다.
+ * 
+ * 4) 인터페이스 분리 원칙 (ISP)
+ * 클래스는 자신이 사용하지 않는 인터페이스의 영향을 받지 않아야 한다.
+ * 무조건 무의미한것들을 받으면 성능이 떨어진다
+ * 즉, 해당 클래스에게 무의미한 메소드의 구현을 막자는 의미
+ * 인터페이스를 너무 크게 정의하기보단 필요한 만큼만 정의하고 클래스는 요구사항에 맞게 인터페이스를 구현 하도록 유도 해야한다
+ * 
+ * 5)
+ */
+
+abstract class Media {
+   constructor(public title:string){
+    
+   }
+   abstract play(): void; // 추상 클래스 정의하 메서드는 상속받은 자식 클래스에서 무조건 만들어야한다. -> 추상 메서드 필요
+ }
+
+ class Song extends Media{
+  play(): void {
+    console.log(`${this.title}노래가 재생 중`)
+  }
+ }
+
+ const song1:Song = new Song('Perfect');
+ song1.play();
+
+
+ // 단일 책임의 원칙 예시
+ class UserService{
+  constructor(private db: Database){}
+
+  getUser(id:number): void{
+
+    return this.db.findUser(id);
+  }
+
+   saveUser(user:User): void{
+
+    return this.db.saveUser(user);
+  }
+ }
+
+ class EmailService{
+  sendWelcomeEmail(user:User):void{
+    console.log(`Sending welcome emaul to ${user.email}`)
+  }
+ }
+
+ // 개방 폐쇠 원칙 예시
+ interface Notifiacation {
+  send(message:string):void;
+ }
+
+ class EmailNotifier implements Notifiacation {
+  send(msg: string){
+    console.log(`이메일 발송: ${msg}`)
+  }
+ }
+
+  class SMSNotifier implements Notifiacation {
+  send(msg: string){
+    console.log(`SMS 발송: ${msg}`)
+  }
+ }
+
+ function notify(userMsg: string, service: Notifiacation){
+  service.send(userMsg);
+ }
+
+ // 리스코프 치환 원칙 예시
+//  class Bird{
+//   fly(): void{
+//     console.log('펄럭펄럭')
+//   }
+//  }
+
+//  class Penguin extends Bird {
+//   // 에러 펭귄을 날지 못함 해결방법 단일 책임의 원칙? 인터페이스? 추상 클래스?
+//  }
+
+ // 리스코프 치환 해결 방법 -> 추상 클래스 이용해 논리적으로 맞춰야한다
+ abstract class Bird{
+  abstract move(): void;
+ }
+
+ class NonFlylingBird extends Bird{
+  move(){
+    console.log('펄럭펄럭')
+  }
+ }
+
+  class FlylingBird extends Bird{
+  move(){
+    console.log('뚜벅뚜벅')
+  }
+ }
+
+ // 인터페이스 분리 원칙 예시
+ interface Printer{
+  print(): void;
+ }
+
+  interface Scanner{
+  scan(): void;
+ }
+
+ class SmartPrinter implements Printer, Scanner{
+  print() {}
+  scan() {}
+ }
