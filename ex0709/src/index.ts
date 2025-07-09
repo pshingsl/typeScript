@@ -365,6 +365,15 @@ myCloudDatabase.saveData("클라우드 데이터")
  * 유연한 구조: enum과 달리 키에 다양한 타입의 값을 할당할 수 있다.
  * 런타임 유연성: 필요에 따라 객체의 속성을 추가, 수정, 삭제하는 등 다양한 용도로 활용
  * 다목적 사용: 상수 그룹화 외에도 데이터 구조, 설정 객체 등 다양한 용도로 활용
+ * js처럼 상수, 배열, 등등 여러가지가 들어올 수 있다
+ * 
+ * - enum을 쓰면 좋은 경우
+ *  - enum은 간단한 상수 값을 그룹화 해서 관리를 할 때 적합
+ *  - 또한, enum은 상수 값이기 때문에 **각 멤버의 값이 변하면 안된다는 조건** 있음
+ * 
+ * - 객체 리러털을 쓰면 좋은 경우
+ *   - 객체 리터럴은 **멤버의 값이나 데이터 타입을 맘대로 변경** 할 수 있을때
+ *   - 복잡합 구조와 다양한 데이터 타입을 사용해야 할 때는 객체 리터럴 사용
  */
 
 //enum 쓰는 이유 안정성
@@ -416,3 +425,19 @@ const appConfig = {
   isActicve: true,
   maxUsers: 100,
 }
+
+const userProfile = {
+  id: "user-123",
+  username: "TypeScript_Master",
+  email: "ts.master@example.com",
+  roles: ["admin", "developer"],
+  settings: {
+    theme:"dark",
+    notification: true,
+  },
+  greet: function(){
+    console.log(`안녕하세요, ${this.username}님!`);
+  }
+};
+console.log(`앱 이름: ${appConfig.appName}, 버전: ${appConfig.version}`);
+userProfile.greet();
