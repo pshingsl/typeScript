@@ -158,7 +158,7 @@ if(!libraryBooks[index].isAvailable){
 }
 
 // 유저 생성
-function registerUser(user:User, newUserId : string, newUserName:string, newUserRole:Role):void{
+function registerUser(user:User, { id, name, role }:User){
   // 관리자인지 확인
   if(!isAdmin(user)){
   console.log("권한없음");
@@ -166,16 +166,16 @@ function registerUser(user:User, newUserId : string, newUserName:string, newUser
 }
 
 // 유저 리스트에 존재하는지 확인
-  const exist = libraryUsers.some(b => b.Id === newUserId)
+  const exist = libraryUsers.some(b => b.Id === user.Id)
   if(exist){
     console.log(`이미 존재합니다.`)
     return;
   }
 // 새로운 유저 추가
 const newUser : User = {
-  Id: newUserId,
-  name:newUserName,
-  role:newUserRole
+  Id: id,
+  name:name,
+  role:role
 }
     libraryUsers.push(newUser)
 }
