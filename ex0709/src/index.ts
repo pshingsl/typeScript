@@ -25,7 +25,7 @@ const temp2 = new Coffee('아메리카노', 10);
 // temp, temp2는 커피라는 공통점이 있지만 서로 같은건 아니다
 
 /** 생성자
- *  생성자는 클래스의 인스턴스를 생성하고 초기화하는데 사용되는 특별한 메소드
+ *  생성자는 클래스의 인스턴스(객체)를 생성하고 초기화하는데 사용되는 특별한 메소드
  *  생성자는 클래스 내에서 constructor라는 이름으로 정의
  *  생성자는 인스턴스를 생성할 때 자동으로 호출
  *  생성자는 클래스 내에 오직 하나만 존재할 수 있다
@@ -70,7 +70,7 @@ class BankAccount {
 
 const test = new BankAccount(10000)
 test.getBalance();
-test.deposit(10000) // depoist 제한자가 private면 에러 
+test.deposit(10000) // 클래스안에 depoist 제한자가 private면 에러 
 //  private는 밖에서 사용못함 해당 함수 안에서 사용 -> private 메서드는 외부에서 직접 호출할 방법이 없다!
 
 /** 2시 내용
@@ -112,9 +112,11 @@ class ElectricCar extends Vehicle {
 
 class Car extends Vehicle {
   move() {
-    console.log('시끄럽게 이동 중...') // 메서드 오버라이딩:부모에서 물려받은 것을 자식이 부모에게서 받은것을 재정의함
+    console.log('시끄럽게 이동 중...') 
   }
 }
+// 메서드 오버라이딩:부모에서 물려받은 것을 자식이 부모에게서 받은것을 재정의함
+// 메서드 오버라이딩으로 새로운걸 정의할 수 잇다.
 const tesla = new ElectricCar();
 tesla.move();
 tesla.go();
@@ -152,7 +154,7 @@ animal.eat();
 
 /**3시 내용 
  * 추상 클래스
- * 추상 클래스는 클래스와는 다르게 인스턴스화를 할 수 없는 클래스
+ * 추상 클래스는 클래스와는 다르게 인스턴스화(객체화)를 할 수 없는 클래스
  * 추상 클래스의 목적은 상속을 통해 자식 클래스에서 메서드를 제각각 구현하도록 강제를 하는 용도
  * 추상 클래스도 최소한의 기본 메서드는 정의를 할 수 있음
  * 핵심 기능의 구현은 전부 자식 클래스에게 위임
@@ -227,26 +229,28 @@ song1.play();
 
 
 // 단일 책임의 원칙 예시
-class UserService {
-  constructor(private db: Database) { }
+// class UserService {
+//   constructor(private db: Database) { }
 
-  getUser(id: number): void {
+//   getUser(id: number): void {
 
-    return this.db.findUser(id);
-  }
+//     return this.db.findUser(id);
+//   }
 
-  saveUser(user: User): void {
+//   saveUser(user: User): void {
 
-    return this.db.saveUser(user);
-  }
-}
+//     return this.db.saveUser(user);
+//   }
+// }
 
-class EmailService {
-  sendWelcomeEmail(user: User): void {
-    console.log(`Sending welcome emaul to ${user.email}`)
-  }
-}
+
+// class EmailService {
+//   sendWelcomeEmail(user: User): void {
+//     console.log(`Sending welcome emaul to ${user.email}`)
+//   }
+// }
 // 유저 서비스는 유저만 관리 이메일서비스는 이메일 전송만 관리
+// 에러난 이유도 이메일서비스에 이메일만 있는게 아니라 유저가 있기 때문이다
 
 // 개방 폐쇠 원칙 예시
 interface Notifiacation {
